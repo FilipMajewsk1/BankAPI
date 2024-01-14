@@ -55,6 +55,7 @@ public class ClientService {
         clientToUpdate.setName(client.getName());
         clientToUpdate.setSurname(client.getSurname());
         clientToUpdate.setEmail(client.getEmail());
+        clientToUpdate.setPesel(client.getPesel());
         clientToUpdate.setPhoneNum(client.getPhoneNum());
         clientToUpdate.setAccount(client.getAccount());
 
@@ -73,6 +74,7 @@ public class ClientService {
                 dto.getName(),
                 dto.getSurname(),
                 dto.getEmail(),
+                dto.getPesel(),
                 dto.getPhoneNum(),
                 accountService.getAccount(dto.getAccount_id())
         ) : null;

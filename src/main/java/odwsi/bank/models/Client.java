@@ -40,6 +40,10 @@ public class Client {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @NotNull
+    @Size(min = 11, max = 11, message = "PESEL must be 11 characters.")
+    private String pesel;
+
     @NotNull(message = "Phone number must not be null.")
     @Size(min = 9, max = 9, message = "Phone number must be 9 characters.")
     @Column(unique = true, nullable = false)

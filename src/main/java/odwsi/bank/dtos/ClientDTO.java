@@ -13,6 +13,7 @@ public class ClientDTO {
     private String name;
     private String surname;
     private String email;
+    private  String pesel;
     private String phoneNum;
     private int account_id;
 
@@ -24,6 +25,7 @@ public class ClientDTO {
         dto.name = client.getName();
         dto.surname = client.getSurname();
         dto.email = client.getEmail();
+        dto.pesel = client.getPesel();
         dto.phoneNum = client.getPhoneNum();
         dto.account_id = client.getAccount().getId();
 

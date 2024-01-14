@@ -1,0 +1,54 @@
+package odwsi.bank.models;
+
+import jakarta.persistence.*;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Builder;
+
+import java.util.Objects;
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity
+@Builder
+@Table(name = "Transfers")
+@NotNull(message = "The transfer must not be null.")
+public class Transfer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="transfer_id")
+    private int id;
+
+    @NotNull(message = "Sum must not be null.")
+    private long sum;
+
+    @NotNull(message = "Account number must not be null.")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Account fromAccount;
+
+    @NotNull(message = "Account number must not be null.")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Account toAccount;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transfer transfer = (Transfer) o;
+        return id == transfer.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
