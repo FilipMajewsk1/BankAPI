@@ -37,14 +37,14 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers("/auth/**", "/error")
+                        .requestMatchers("/**", "/error")
                         .permitAll()
                         .anyRequest()
                         .authenticated());
         http
                 .cors(config ->{
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("https://example.com"));//TODO daj tu ścieżkę
+           // configuration.setAllowedOrigins(Arrays.asList("https://example.com"));//TODO daj tu ścieżkę
             configuration.setAllowedHeaders(Arrays.asList("*"));
             configuration.setAllowedMethods(Arrays.asList("GET","POST"));
 

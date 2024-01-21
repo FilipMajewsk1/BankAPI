@@ -25,12 +25,12 @@ public class ClientService {
     }
 
     public Client getClient(String email) {
-        return repository.findByEmail(email).orElse(null);
+        return repository.findByEmail(email);
     }
 
     public Client getClient(Authentication authentication) {
         String email = authentication.getPrincipal().toString();
-        return repository.findByEmail(email).orElse(null);
+        return repository.findByEmail(email);
     }
 
     public Iterable<Client> getAllClients() {

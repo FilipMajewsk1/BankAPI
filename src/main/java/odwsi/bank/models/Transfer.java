@@ -5,20 +5,19 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Builder;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.Objects;
+import org.springframework.data.annotation.CreatedDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @Builder
+@Data
 @Table(name = "Transfers")
 @NotNull(message = "The transfer must not be null.")
 public class Transfer {
@@ -41,6 +40,9 @@ public class Transfer {
     @NotNull(message = "Account number must not be null.")
     @ManyToOne(cascade = CascadeType.MERGE)
     private Account toAccount;
+
+    @NotNull
+    private ZonedDateTime time;
 
 
     @Override

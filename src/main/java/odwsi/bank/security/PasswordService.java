@@ -1,5 +1,7 @@
 package odwsi.bank.security;
 
+import odwsi.bank.dtos.PasswordDTO;
+import odwsi.bank.models.Client;
 import odwsi.bank.models.Password;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -73,6 +75,13 @@ public class PasswordService {
         return passwords;
     }
 
-    //TODO
+    public PasswordDTO getOneOfTheCombinations(Client client){
+        List<Password> passwords = client.getPasswords();
+        int random = new Random().nextInt(20);
+        Password p = passwords.get(random);
+        PasswordDTO pp = PasswordDTO.builder().id(p.getId()).positions(p.getPositions()).build();
+        return pp;
+    }
+
 
 }

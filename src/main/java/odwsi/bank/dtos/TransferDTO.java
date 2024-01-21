@@ -4,6 +4,7 @@ import lombok.*;
 import odwsi.bank.models.Transfer;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +17,8 @@ public class TransferDTO {
     private BigDecimal sum;
     private int from_id;
     private int to_id;
+
+    private ZonedDateTime time;
 
     public static TransferDTO mapToDto(Transfer transfer) {
         if (transfer == null) return null;

@@ -1,10 +1,7 @@
 package odwsi.bank.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
@@ -14,6 +11,7 @@ import java.util.Objects;
 @Builder
 public class Password {
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="password_id")
     private int id;
@@ -22,6 +20,7 @@ public class Password {
     private String password;
 
     @Setter
+    @Getter
     private String positions;
 
     @Setter
