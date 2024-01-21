@@ -69,14 +69,14 @@ public class ClientService {
     }
 
     public Client mapFromDto(ClientDTO dto) {
-        return dto != null ? new Client(
-                -1,
-                dto.getName(),
-                dto.getSurname(),
-                dto.getEmail(),
-                dto.getPesel(),
-                dto.getPhoneNum(),
-                accountService.getAccount(dto.getAccount_id())
-        ) : null;
+        return dto != null ? Client.builder()
+                .name(dto.getName())
+                .surname(dto.getSurname())
+                .email(dto.getEmail())
+                .pesel(dto.getPesel())
+                .phoneNum(dto.getPhoneNum())
+                .account(accountService.getAccount(dto.getAccount_id()))
+                .build()
+         : null;
     }
 }

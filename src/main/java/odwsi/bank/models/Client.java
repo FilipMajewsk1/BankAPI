@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,6 +42,9 @@ public class Client {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @NotNull(message = "Password must not be empty.")
+    private String password;
+
     @NotNull
     @Size(min = 11, max = 11, message = "PESEL must be 11 characters.")
     private String pesel;
@@ -53,6 +58,13 @@ public class Client {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
+
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "Roles",
+            joinColumns = @JoinColumn(name = "client_id", referencedColumnName = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
