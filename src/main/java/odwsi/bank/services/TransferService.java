@@ -10,6 +10,10 @@ import odwsi.bank.models.Transfer;
 import odwsi.bank.repositories.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,8 +33,22 @@ public class TransferService {
         return repository.findById(id).orElse(null);
     }
 
+
     public Iterable<Transfer> getAllTransfers() {
         return repository.findAll();
+    }
+
+    public Iterable<Transfer> getClientsTransfers(String number) {
+        Iterable<Transfer> allTransfers = repository.findAll();
+        List<Transfer> selectedTransfers = new ArrayList<>();
+
+        for(Transfer transfer : allTransfers){
+            if(transfer.getFromAccount().getAccountNumber() == number ||
+                    transfer.getToAccount().getAccountNumber() == number){
+                selectedTransfers.add(transfer);
+            }
+        }
+        return selectedTransfers;
     }
 
     public Transfer createTransfer(Transfer transfer) {
@@ -70,6 +88,7 @@ public class TransferService {
     public Transfer mapFromDto(TransferDTO dto) {
         return dto != null ? new Transfer(
                 -1,
+                dto.getTitle(),
                 dto.getSum(),
                 accountService.getAccount(dto.getFrom_id()),
                 accountService.getAccount(dto.getTo_id())

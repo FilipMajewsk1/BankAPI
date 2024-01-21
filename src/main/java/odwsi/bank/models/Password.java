@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
@@ -17,10 +18,13 @@ public class Password {
     @Column(name="password_id")
     private int id;
 
+    @Setter
     private String password;
 
+    @Setter
     private String positions;
 
+    @Setter
     @ManyToOne
     private Client client;
 

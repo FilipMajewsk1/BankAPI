@@ -41,7 +41,7 @@ public class LoginController {
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
-        session.setAttribute(//TODO Klucz, context);
+        //TODO session.setAttribute();
 
         return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
     }

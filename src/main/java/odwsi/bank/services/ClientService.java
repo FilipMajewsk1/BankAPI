@@ -7,6 +7,7 @@ import odwsi.bank.dtos.ClientDTO;
 import odwsi.bank.models.Client;
 import odwsi.bank.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.Set;
 
@@ -23,11 +24,17 @@ public class ClientService {
         this.validator = validator;
     }
 
-    public Client getClient(int id) {
-        return repository.findById(id).orElse(null);
+    public Client getClient(String email) {
+        return repository.findByEmail(email).orElse(null);
+    }
+
+    public Client getClient(Authentication authentication) {
+        String email = authentication.getPrincipal().toString();
+        return repository.findByEmail(email).orElse(null);
     }
 
     public Iterable<Client> getAllClients() {
+
         return repository.findAll();
     }
 
@@ -42,6 +49,7 @@ public class ClientService {
     }
 
     public void deleteClient(int id) {
+
         repository.deleteById(id);
     }
 

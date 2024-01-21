@@ -48,8 +48,8 @@ public class ClientController {
             description = "Get Client object by specifying its id",
             tags = { "get" })
     @GetMapping("/clients/{id}")
-    public ClientDTO get(@PathVariable int id) {
-        return ClientDTO.mapToDto(service.getClient(id));
+    public ClientDTO get(@PathVariable String email) {
+        return ClientDTO.mapToDto(service.getClient(email));
     }
 
     @Operation(
