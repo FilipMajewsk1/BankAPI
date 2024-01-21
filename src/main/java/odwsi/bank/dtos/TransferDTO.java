@@ -3,6 +3,8 @@ package odwsi.bank.dtos;
 import lombok.*;
 import odwsi.bank.models.Transfer;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -10,7 +12,8 @@ import odwsi.bank.models.Transfer;
 @Data
 public class TransferDTO {
     private int id;
-    private long sum;
+    private String title;
+    private BigDecimal sum;
     private int from_id;
     private int to_id;
 
@@ -19,6 +22,7 @@ public class TransferDTO {
 
         TransferDTO dto = new TransferDTO();
         dto.id = transfer.getId();
+        dto.title = transfer.getTitle();
         dto.sum = transfer.getSum();
         dto.from_id = transfer.getFromAccount().getId();
         dto.to_id = transfer.getToAccount().getId();

@@ -43,7 +43,8 @@ public class Client {
     private String email;
 
     @NotNull(message = "Password must not be empty.")
-    private String password;
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Password> passwords;
 
     @NotNull
     @Size(min = 11, max = 11, message = "PESEL must be 11 characters.")

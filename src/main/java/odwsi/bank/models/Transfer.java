@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,8 +28,11 @@ public class Transfer {
     @Column(name="transfer_id")
     private int id;
 
+    @NotNull
+    private String title;
+
     @NotNull(message = "Sum must not be null.")
-    private long sum;
+    private BigDecimal sum;
 
     @NotNull(message = "Account number must not be null.")
     @ManyToOne(cascade = CascadeType.MERGE)
