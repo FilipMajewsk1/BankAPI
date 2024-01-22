@@ -46,6 +46,7 @@ public class Client implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Getter
     @NotNull(message = "Password must not be empty.")
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Password> passwords;
@@ -64,12 +65,6 @@ public class Client implements UserDetails {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
-    @NotNull
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "Roles",
-            joinColumns = @JoinColumn(name = "client_id", referencedColumnName = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
-    private List<Role> roles = new ArrayList<>();
 
 
     @Override

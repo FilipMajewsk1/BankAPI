@@ -3,19 +3,25 @@ package odwsi.bank.security;
 import odwsi.bank.dtos.PasswordDTO;
 import odwsi.bank.models.Client;
 import odwsi.bank.models.Password;
+import odwsi.bank.repositories.ClientRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+@Service
 public class PasswordService {
 
     private final PasswordEncoder passwordEncoder;
+    private final ClientRepository clientRepository;
 
-    public PasswordService(PasswordEncoder passwordEncoder) {
+    public PasswordService(PasswordEncoder passwordEncoder, ClientRepository clientRepository) {
         this.passwordEncoder = passwordEncoder;
+        this.clientRepository = clientRepository;
     }
 
     private static List<Integer> pickThreeRandomNumbers(String str) {
@@ -49,14 +55,12 @@ public class PasswordService {
             List<Integer> indices = pickThreeRandomNumbers(str);
             String positions = "";
             for (int j = 0; j < 3; j++){
-                positions+=indices.get(j).toString();
+                positions+=indices.get(j).toString()+"/";
             }
             String combination = indices.stream()
-                    .sorted()
                     .map(str::charAt)
                     .map(Object::toString)
                     .collect(Collectors.joining());
-
 
             if (!combinations.contains(combination)) {
                 combinations.add(combination);
@@ -78,10 +82,20 @@ public class PasswordService {
     public PasswordDTO getOneOfTheCombinations(Client client){
         List<Password> passwords = client.getPasswords();
         int random = new Random().nextInt(20);
-        Password p = passwords.get(random);
-        PasswordDTO pp = PasswordDTO.builder().id(p.getId()).positions(p.getPositions()).build();
+        //Password p = passwords.get(random);
+        PasswordDTO pp = PasswordDTO.builder().id(1).positions(client.getPesel()).build();
+
         return pp;
     }
 
 
+    public Client getUserIfPasswordCorrect(int id, String email, String password) {
+        var client = clientRepository.findByEmail(email);
+        var passwordOpt = client.getPasswords().stream().filter(p-> p.getId() == id).findFirst();
+        if(passwordOpt.isEmpty()) return null;
+        if(passwordEncoder.encode(password).equals(passwordOpt.get().getPassword())){
+            return client;
+        }
+        return null;
+    }
 }

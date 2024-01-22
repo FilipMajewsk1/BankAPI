@@ -44,9 +44,9 @@ public class SecurityConfiguration {
         http
                 .cors(config ->{
             CorsConfiguration configuration = new CorsConfiguration();
-           // configuration.setAllowedOrigins(Arrays.asList("https://example.com"));//TODO daj tu ścieżkę
+            configuration.setAllowedOrigins(Arrays.asList("*"));
             configuration.setAllowedHeaders(Arrays.asList("*"));
-            configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+            configuration.setAllowedMethods(Arrays.asList("*"));
 
             UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
             source.registerCorsConfiguration("/**", configuration);

@@ -91,7 +91,8 @@ public class TransferService {
                 dto.getTitle(),
                 dto.getSum(),
                 accountService.getAccount(dto.getFrom_id()),
-                accountService.getAccount(dto.getTo_id())
+                accountService.getAccount(dto.getTo_id()),
+                dto.getTime()
         ) : null;
     }
 }

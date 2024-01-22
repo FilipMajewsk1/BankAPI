@@ -4,6 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import odwsi.bank.dtos.ClientDTO;
+import odwsi.bank.dtos.CreateClientRequest;
+import odwsi.bank.models.Client;
+import odwsi.bank.security.PasswordService;
+import odwsi.bank.services.AccountService;
 import odwsi.bank.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +19,15 @@ import java.util.List;
 @Tag(name = "Client Controller")
 @RestController
 public class ClientController {
+
     private final ClientService service;
+    private final PasswordService pService;
+    private final AccountService aService;
     @Autowired
-    public ClientController(ClientService service) {
+    public ClientController(ClientService service, PasswordService pService, AccountService aService) {
         this.service = service;
+        this.pService = pService;
+        this.aService = aService;
     }
 
     @Operation(
@@ -26,8 +35,16 @@ public class ClientController {
             description = "Create new Client object",
             tags = { "post" })
     @PostMapping("/clients")
-    public ClientDTO create(@RequestBody ClientDTO clientDto) {
-        return ClientDTO.mapToDto(service.createClient(service.mapFromDto(clientDto)));
+    public Client create(@RequestBody CreateClientRequest request) {
+        Client client = new Client();
+        client.setName(request.getName());
+        client.setSurname(request.getSurname());
+        client.setPesel(request.getPesel());
+        client.setAccount(aService.getAccount(request.getAccount_id()));
+        client.setEmail(request.getEmail());
+        client.setPhoneNum(request.getPhoneNum());
+        client.setPasswords(pService.createThreeCharCombinations(request.getPassword()));
+        return (service.createClient(client));
     }
 
     @Operation(

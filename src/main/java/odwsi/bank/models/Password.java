@@ -17,6 +17,7 @@ public class Password {
     private int id;
 
     @Setter
+    @Getter
     private String password;
 
     @Setter

@@ -25,6 +25,9 @@ public class ClientService {
     }
 
     public Client getClient(String email) {
+        if(repository.findByEmail(email).getPasswords().isEmpty()) {
+            return null;
+        }
         return repository.findByEmail(email);
     }
 
@@ -34,7 +37,6 @@ public class ClientService {
     }
 
     public Iterable<Client> getAllClients() {
-
         return repository.findAll();
     }
 
@@ -44,7 +46,6 @@ public class ClientService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-
         return repository.save(client);
     }
 
