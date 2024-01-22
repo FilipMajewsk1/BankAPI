@@ -3,6 +3,8 @@ package odwsi.bank.dtos;
 import lombok.*;
 import odwsi.bank.models.Account;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -11,7 +13,7 @@ import odwsi.bank.models.Account;
 public class AccountDTO {
     private int id;
     private String accountNumber;
-    private double balance;
+    private BigDecimal balance;
 
     public static  AccountDTO mapToDto(Account account){
         if (account == null) return null;

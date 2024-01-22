@@ -13,7 +13,6 @@ public class Password {
     @Id
     @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="password_id")
     private int id;
 
     @Setter
@@ -25,7 +24,7 @@ public class Password {
     private String positions;
 
     @Setter
-    @ManyToOne
+    @ManyToOne()
     private Client client;
 
     @Override

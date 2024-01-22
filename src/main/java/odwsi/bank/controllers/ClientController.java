@@ -3,6 +3,7 @@ package odwsi.bank.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.transaction.Transactional;
 import odwsi.bank.dtos.ClientDTO;
 import odwsi.bank.dtos.CreateClientRequest;
 import odwsi.bank.models.Client;
@@ -34,16 +35,25 @@ public class ClientController {
             summary = "Create client",
             description = "Create new Client object",
             tags = { "post" })
+    @Transactional
     @PostMapping("/clients")
     public Client create(@RequestBody CreateClientRequest request) {
-        Client client = new Client();
-        client.setName(request.getName());
-        client.setSurname(request.getSurname());
-        client.setPesel(request.getPesel());
-        client.setAccount(aService.getAccount(request.getAccount_id()));
-        client.setEmail(request.getEmail());
-        client.setPhoneNum(request.getPhoneNum());
-        client.setPasswords(pService.createThreeCharCombinations(request.getPassword()));
+//        Client client = new Client();
+//        client.setName(request.getName());
+//        client.setSurname(request.getSurname());
+//        client.setPesel(request.getPesel());
+//        client.setAccount(aService.getAccount(request.getAccount_id()));
+//        client.setEmail(request.getEmail());
+//        client.setPhoneNum(request.getPhoneNum());
+//        client.getPasswords().addAll(pService.createThreeCharCombinations(request.getPassword()));//TODO COś tu nie kmini
+        Client client = Client.builder()
+                .name(request.getName())
+                .surname(request.getSurname())
+                .pesel(request.getPesel())
+                .account(aService.getAccount(request.getAccount_id()))
+                .email(request.getEmail())
+                .phoneNum(request.getPhoneNum())
+                .passwords(pService.createThreeCharCombinations(request.getPassword())).build();
         return (service.createClient(client));
     }
 

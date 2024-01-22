@@ -7,10 +7,7 @@ import odwsi.bank.repositories.ClientRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,8 +48,9 @@ public class PasswordService {
         List<Password> passwords = new ArrayList<>();
         int maxCombinations = 20;
 
-        for (int i = 0; i < maxCombinations; i++) {
+        while(maxCombinations>0) {
             List<Integer> indices = pickThreeRandomNumbers(str);
+            Collections.sort(indices);
             String positions = "";
             for (int j = 0; j < 3; j++){
                 positions+=indices.get(j).toString()+"/";
@@ -69,11 +67,9 @@ public class PasswordService {
                 password.setPositions(positions);
 
                 passwords.add(password);
+                maxCombinations--;
             }
 
-            if (combinations.size() == maxCombinations) {
-                break;
-            }
         }
 
         return passwords;
@@ -83,7 +79,7 @@ public class PasswordService {
         List<Password> passwords = client.getPasswords();
         int random = new Random().nextInt(20);
         //Password p = passwords.get(random);
-        PasswordDTO pp = PasswordDTO.builder().id(1).positions(client.getPesel()).build();
+        PasswordDTO pp = PasswordDTO.builder().id(1).positions(String.valueOf(passwords.size())).build();
 
         return pp;
     }

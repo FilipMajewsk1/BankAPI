@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +34,7 @@ public class Account {
     private String accountNumber;
 
     @NotNull(message = "Balance must not be null.")
-    private double balance;
+    private BigDecimal balance;
 
 
     @Override

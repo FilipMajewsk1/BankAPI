@@ -3,6 +3,7 @@ package odwsi.bank.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import odwsi.bank.dtos.LoginDTO;
 import odwsi.bank.dtos.PasswordDTO;
@@ -39,13 +40,14 @@ public class LoginController {
     }
 
     @PostMapping("/login")
+    @Transactional
     public ResponseEntity<String> authenticateUser(@RequestBody PasswordLoginRequest request,
                                                    HttpSession session) {
         //sprawdź hasło z bazy na podstawie id
-        var user = passwordService.getUserIfPasswordCorrect(request.getId(), request.getEmail(), request.getPassword());
+        var client = passwordService.getUserIfPasswordCorrect(request.getId(), request.getEmail(), request.getPassword());
 
-        if(user!=null) {
-            var authentication = UsernamePasswordAuthenticationToken.authenticated(user.getEmail(), null, List.of(new SimpleGrantedAuthority("user")));
+        if(client!=null) {
+            var authentication = UsernamePasswordAuthenticationToken.authenticated(client.getEmail(), null, List.of(new SimpleGrantedAuthority("user")));
 
             SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(authentication);
@@ -53,6 +55,6 @@ public class LoginController {
 
             return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
     }
 }
