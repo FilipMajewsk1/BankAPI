@@ -77,10 +77,10 @@ public class PasswordService {
 
     public PasswordDTO getOneOfTheCombinations(Client client){
         List<Password> passwords = client.getPasswords();
-        int random = new Random().nextInt(20);
-        //Password p = passwords.get(random);
-        PasswordDTO pp = PasswordDTO.builder().id(1).positions(String.valueOf(passwords.size())).build();
-
+        int random = new Random().nextInt(19);
+        PasswordDTO pp = PasswordDTO.builder()
+                .id(passwords.get(random).getId())
+                .positions(passwords.get(random).getPositions()).build();
         return pp;
     }
 

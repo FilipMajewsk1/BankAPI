@@ -21,7 +21,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Builder
-@Table(name = "Account")
+@Table(name = "Accountt")
 @NotNull(message = "The account must not be null.")
 public class Account {
     @Id

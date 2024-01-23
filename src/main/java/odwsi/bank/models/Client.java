@@ -5,11 +5,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Builder;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +16,7 @@ import java.util.List;
 import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
 @Builder
 @Table(name = "Clients")
@@ -43,7 +38,6 @@ public class Client implements UserDetails {
     @NotNull(message = "Email must not be null.")
     @Size(min = 7, max = 50, message = "Email must be between 7 and 50 characters.")
     @Email(message = "Email must be in a valid format.")
-    @Column(unique = true, nullable = false)
     private String email;
 
     @Getter
@@ -57,7 +51,6 @@ public class Client implements UserDetails {
 
     @NotNull(message = "Phone number must not be null.")
     @Size(min = 9, max = 9, message = "Phone number must be 9 characters.")
-    @Column(unique = true, nullable = false)
     private String phoneNum;
 
     @NotNull(message = "The account must not be null.")

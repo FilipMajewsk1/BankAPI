@@ -7,8 +7,10 @@ import odwsi.bank.dtos.TransferDTO;
 import odwsi.bank.models.Account;
 import odwsi.bank.models.Client;
 import odwsi.bank.models.Transfer;
+import odwsi.bank.repositories.AccountRepository;
 import odwsi.bank.repositories.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,13 +22,17 @@ import java.util.Set;
 public class TransferService {
     private final TransferRepository repository;
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
+    private final ClientService clientService;
     private final Validator validator;
 
     @Autowired
-    public TransferService(TransferRepository repository, AccountService accountService, Validator validator) {
+    public TransferService(TransferRepository repository,ClientService clientService ,AccountService accountService, Validator validator, AccountRepository accountRepository) {
         this.repository = repository;
         this.accountService = accountService;
+        this.clientService = clientService;
         this.validator = validator;
+        this.accountRepository = accountRepository;
     }
 
     public Transfer getTransfer(int id) {
@@ -38,9 +44,10 @@ public class TransferService {
         return repository.findAll();
     }
 
-    public Iterable<Transfer> getClientsTransfers(String number) {
+    public Iterable<Transfer> getClientsTransfers(String email) {
         Iterable<Transfer> allTransfers = repository.findAll();
         List<Transfer> selectedTransfers = new ArrayList<>();
+        String number = clientService.getClient(email).getAccount().getAccountNumber();
 
         for(Transfer transfer : allTransfers){
             if(transfer.getFromAccount().getAccountNumber() == number ||
@@ -73,7 +80,6 @@ public class TransferService {
         }
 
         transferToUpdate.setSum(transfer.getSum());
-        transferToUpdate.setFromAccount(transfer.getFromAccount());
         transferToUpdate.setToAccount(transfer.getToAccount());
 
         Set<ConstraintViolation<Transfer>> violations = validator.validate(transferToUpdate);
@@ -90,8 +96,8 @@ public class TransferService {
                 -1,
                 dto.getTitle(),
                 dto.getSum(),
-                accountService.getAccount(dto.getFrom_id()),
-                accountService.getAccount(dto.getTo_id()),
+                accountService.getAccount(accountRepository.findByAccountNumber(dto.getFromAccountNumber()).getId()),
+                accountService.getAccount(accountRepository.findByAccountNumber(dto.getToAccountNumber()).getId()),
                 dto.getTime()
         ) : null;
     }

@@ -7,10 +7,15 @@ import jakarta.transaction.Transactional;
 import odwsi.bank.dtos.ClientDTO;
 import odwsi.bank.dtos.CreateClientRequest;
 import odwsi.bank.models.Client;
+import odwsi.bank.models.Password;
 import odwsi.bank.security.PasswordService;
 import odwsi.bank.services.AccountService;
 import odwsi.bank.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,6 +24,7 @@ import java.util.List;
 
 @Tag(name = "Client Controller")
 @RestController
+@RequestMapping("/api")
 public class ClientController {
 
     private final ClientService service;
@@ -38,14 +44,6 @@ public class ClientController {
     @Transactional
     @PostMapping("/clients")
     public Client create(@RequestBody CreateClientRequest request) {
-//        Client client = new Client();
-//        client.setName(request.getName());
-//        client.setSurname(request.getSurname());
-//        client.setPesel(request.getPesel());
-//        client.setAccount(aService.getAccount(request.getAccount_id()));
-//        client.setEmail(request.getEmail());
-//        client.setPhoneNum(request.getPhoneNum());
-//        client.getPasswords().addAll(pService.createThreeCharCombinations(request.getPassword()));//TODO COś tu nie kmini
         Client client = Client.builder()
                 .name(request.getName())
                 .surname(request.getSurname())
@@ -54,6 +52,7 @@ public class ClientController {
                 .email(request.getEmail())
                 .phoneNum(request.getPhoneNum())
                 .passwords(pService.createThreeCharCombinations(request.getPassword())).build();
+        client.getPasswords().forEach(p -> p.setClient(client));
         return (service.createClient(client));
     }
 
@@ -75,9 +74,10 @@ public class ClientController {
             description = "Get Client object by specifying its id",
             tags = { "get" })
     @GetMapping("/clients/{id}")
-    public ClientDTO get(@PathVariable String email) {
-        return ClientDTO.mapToDto(service.getClient(email));
+    public ResponseEntity<?> get(Authentication authentication) {
+        return new ResponseEntity<>( ClientDTO.mapToDto(service.getClient(authentication)), HttpStatus.OK);
     }
+
 
     @Operation(
             summary = "Update client",

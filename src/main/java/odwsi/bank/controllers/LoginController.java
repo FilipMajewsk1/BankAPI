@@ -29,6 +29,7 @@ import java.util.List;
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @RestController
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class LoginController {
     private final AuthenticationManager authenticationManager;
@@ -41,9 +42,8 @@ public class LoginController {
 
     @PostMapping("/login")
     @Transactional
-    public ResponseEntity<String> authenticateUser(@RequestBody PasswordLoginRequest request,
+    public ResponseEntity<?> authenticateUser(@RequestBody PasswordLoginRequest request,
                                                    HttpSession session) {
-        //sprawdź hasło z bazy na podstawie id
         var client = passwordService.getUserIfPasswordCorrect(request.getId(), request.getEmail(), request.getPassword());
 
         if(client!=null) {
@@ -53,7 +53,7 @@ public class LoginController {
             context.setAuthentication(authentication);
             session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, context);
 
-            return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
+            return new ResponseEntity<>(client, HttpStatus.OK);
         }
         return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
     }

@@ -6,6 +6,7 @@ import lombok.*;
 import java.util.Objects;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

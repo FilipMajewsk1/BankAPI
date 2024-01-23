@@ -15,9 +15,8 @@ public class TransferDTO {
     private int id;
     private String title;
     private BigDecimal sum;
-    private int from_id;
-    private int to_id;
-
+    private String fromAccountNumber;
+    private String toAccountNumber;
     private ZonedDateTime time;
 
     public static TransferDTO mapToDto(Transfer transfer) {
@@ -27,8 +26,9 @@ public class TransferDTO {
         dto.id = transfer.getId();
         dto.title = transfer.getTitle();
         dto.sum = transfer.getSum();
-        dto.from_id = transfer.getFromAccount().getId();
-        dto.to_id = transfer.getToAccount().getId();
+        dto.fromAccountNumber = transfer.getFromAccount().getAccountNumber();
+        dto.toAccountNumber = transfer.getToAccount().getAccountNumber();
+        dto.time = transfer.getTime();
 
         return dto;
     }
