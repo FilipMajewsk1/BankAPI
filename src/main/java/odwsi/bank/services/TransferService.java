@@ -64,6 +64,14 @@ public class TransferService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
+        Account fromAccount = accountRepository.findByAccountNumber(transfer.getFromAccount().getAccountNumber());
+        Account toAccount = accountRepository.findByAccountNumber(transfer.getToAccount().getAccountNumber());
+
+        fromAccount.setBalance(fromAccount.getBalance().add(transfer.getSum().negate()));
+        toAccount.setBalance(toAccount.getBalance().add(transfer.getSum()));
+
+        accountRepository.save(fromAccount);
+        accountRepository.save(toAccount);
 
         return repository.save(transfer);
     }
@@ -97,8 +105,7 @@ public class TransferService {
                 dto.getTitle(),
                 dto.getSum(),
                 accountService.getAccount(accountRepository.findByAccountNumber(dto.getFromAccountNumber()).getId()),
-                accountService.getAccount(accountRepository.findByAccountNumber(dto.getToAccountNumber()).getId()),
-                dto.getTime()
+                accountService.getAccount(accountRepository.findByAccountNumber(dto.getToAccountNumber()).getId())
         ) : null;
     }
 }

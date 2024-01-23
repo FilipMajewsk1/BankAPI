@@ -1,14 +1,17 @@
 package odwsi.bank;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import odwsi.bank.models.Account;
 import odwsi.bank.models.Client;
+import odwsi.bank.models.Transfer;
 import odwsi.bank.repositories.AccountRepository;
 import odwsi.bank.repositories.ClientRepository;
 import odwsi.bank.repositories.TransferRepository;
 import odwsi.bank.security.PasswordService;
 import odwsi.bank.services.AccountService;
 import odwsi.bank.services.ClientService;
+import odwsi.bank.services.TransferService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,8 +29,10 @@ public class DataFactory implements CommandLineRunner {
     private final PasswordService passwordService;
     private final PasswordEncoder passwordEncoder;
     private final TransferRepository transferRepository;
+    private final TransferService transferService;
 
     @Override
+    @Transactional
     public void run(String... args) {
         createAccount(1, "11111111111111111111111111", "2500.12");
         createAccount(2, "11111111111111111111111112", "3500.12");
@@ -36,6 +41,8 @@ public class DataFactory implements CommandLineRunner {
         createClient(1, "Adam", "Malysz", "12345678910", 1 ,"skaczedaleko@gmail.com", "Password123", "111222333");
         createClient(2, "Kamil", "Stoch", "22345678910", 2 ,"slaboskacze@gmail.com", "zetis12345", "113222333");
         createClient(3, "Mariusz", "Pudzianowski", "17745678910", 3 ,"tobynicniedalo@gmail.com", "PolskaGora123", "111222343");
+
+        createTransfer(1, "fromMariuszToKamil", "21.50","11111111111111111111111113",  "11111111111111111111111112");
 
     }
 
@@ -70,9 +77,13 @@ public class DataFactory implements CommandLineRunner {
                                 String sum,
                                 String fromAccountNumber,
                                 String toAccountNumber){
-
-
-
+        Transfer transfer= new Transfer(
+                id,
+                title,
+                new BigDecimal(sum),
+                accountRepository.findByAccountNumber(fromAccountNumber),
+                accountRepository.findByAccountNumber(toAccountNumber));
+        transferService.createTransfer(transfer);
     }
 
 }
