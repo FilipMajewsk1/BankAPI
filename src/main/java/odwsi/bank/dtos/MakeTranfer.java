@@ -15,5 +15,4 @@ public class MakeTranfer {
     private BigDecimal sum;
     private String fromAccountNumber;
     private String toAccountNumber;
-    private ZonedDateTime time;
 }

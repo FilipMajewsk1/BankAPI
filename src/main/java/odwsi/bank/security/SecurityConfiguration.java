@@ -37,7 +37,7 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers("/**")
+                        .requestMatchers("/**", "/error")
                         .permitAll()
                         .anyRequest()
                         .authenticated());

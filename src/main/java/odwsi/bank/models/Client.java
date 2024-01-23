@@ -41,7 +41,6 @@ public class Client implements UserDetails {
     private String email;
 
     @Getter
-    @NotNull(message = "Password must not be empty.")
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Password> passwords;
 

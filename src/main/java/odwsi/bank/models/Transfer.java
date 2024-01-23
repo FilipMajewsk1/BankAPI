@@ -41,8 +41,6 @@ public class Transfer {
     @ManyToOne(cascade = CascadeType.MERGE)
     private Account toAccount;
 
-    @NotNull
-    private ZonedDateTime time;
 
 
     @Override

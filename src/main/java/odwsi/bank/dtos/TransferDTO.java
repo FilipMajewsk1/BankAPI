@@ -17,7 +17,6 @@ public class TransferDTO {
     private BigDecimal sum;
     private String fromAccountNumber;
     private String toAccountNumber;
-    private ZonedDateTime time;
 
     public static TransferDTO mapToDto(Transfer transfer) {
         if (transfer == null) return null;
@@ -28,7 +27,6 @@ public class TransferDTO {
         dto.sum = transfer.getSum();
         dto.fromAccountNumber = transfer.getFromAccount().getAccountNumber();
         dto.toAccountNumber = transfer.getToAccount().getAccountNumber();
-        dto.time = transfer.getTime();
 
         return dto;
     }
