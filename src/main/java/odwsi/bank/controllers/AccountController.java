@@ -3,8 +3,13 @@ package odwsi.bank.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import odwsi.bank.dtos.AccountDTO;
+import odwsi.bank.dtos.ClientDTO;
+import odwsi.bank.models.Account;
 import odwsi.bank.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -12,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "Account Controller")
-@RequestMapping("/api")
+@RequestMapping("/api/norm")
 @RestController
 public class AccountController {
     private final AccountService service;
@@ -48,10 +53,9 @@ public class AccountController {
             description = "Get Account object by specifying its id",
             tags = { "get" })
     @GetMapping("/accounts/{id}")
-    public AccountDTO get(@PathVariable int id) {
-        return AccountDTO.mapToDto(service.getAccount(id));
+    public ResponseEntity<?> get(Authentication authentication) {
+        return new ResponseEntity<>( AccountDTO.mapToDto(service.getAccount(authentication)), HttpStatus.OK);
     }
-
     @Operation(
             summary = "Update account",
             description = "Update Account object by specifying its id",

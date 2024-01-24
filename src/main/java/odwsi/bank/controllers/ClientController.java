@@ -24,7 +24,7 @@ import java.util.List;
 
 @Tag(name = "Client Controller")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/norm")
 public class ClientController {
 
     private final ClientService service;
@@ -71,7 +71,6 @@ public class ClientController {
 
     @Operation(
             summary = "Retrieve client",
-            description = "Get Client object by specifying its id",
             tags = { "get" })
     @GetMapping("/clients/{id}")
     public ResponseEntity<?> get(Authentication authentication) {

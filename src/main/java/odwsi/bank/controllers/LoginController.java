@@ -29,7 +29,7 @@ import java.util.List;
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class LoginController {
     private final AuthenticationManager authenticationManager;
@@ -37,17 +37,21 @@ public class LoginController {
     private final ClientRepository clientRepository;
     @GetMapping("/login")
     public ResponseEntity<PasswordDTO> getPasswordInstructions(@RequestParam String email){
-        return new ResponseEntity<PasswordDTO>(passwordService.getOneOfTheCombinations(clientRepository.findByEmail(email)), HttpStatus.OK);
+        return new ResponseEntity<PasswordDTO>(
+                passwordService.getOneOfTheCombinations(clientRepository.findByEmail(email)), HttpStatus.OK);
     }
 
     @PostMapping("/login")
     @Transactional
-    public ResponseEntity<?> authenticateUser(@RequestBody PasswordLoginRequest request,
-                                                   HttpSession session) {
-        var client = passwordService.getUserIfPasswordCorrect(request.getId(), request.getEmail(), request.getPassword());
+    public ResponseEntity<?> authenticateUser(@RequestBody PasswordLoginRequest loginRequest,
+                                                   HttpSession session, HttpServletRequest request) {
+        var client = passwordService.getUserIfPasswordCorrect(
+                loginRequest.getId(), loginRequest.getEmail(), loginRequest.getPassword());
 
         if(client!=null) {
-            var authentication = UsernamePasswordAuthenticationToken.authenticated(client.getEmail(), null, List.of(new SimpleGrantedAuthority("user")));
+            var authentication =
+                    UsernamePasswordAuthenticationToken.authenticated(
+                            client.getEmail(), null, List.of(new SimpleGrantedAuthority("user")));
 
             SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(authentication);

@@ -24,11 +24,8 @@ import java.util.List;
 public class DataFactory implements CommandLineRunner {
     private final AccountRepository accountRepository;
     private final AccountService accountService;
-    private final ClientRepository clientRepository;
     private final ClientService clientService;
     private final PasswordService passwordService;
-    private final PasswordEncoder passwordEncoder;
-    private final TransferRepository transferRepository;
     private final TransferService transferService;
 
     @Override

@@ -1,5 +1,6 @@
 package odwsi.bank.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -41,6 +42,7 @@ public class Client implements UserDetails {
     private String email;
 
     @Getter
+    @JsonIgnore
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Password> passwords;
 
@@ -105,6 +107,19 @@ public class Client implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", pesel='" + pesel + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                ", account=" + (account != null ? account.getId() : "null") + // Tylko ID konta, aby uniknąć rekurencji
+                '}';
     }
 
 

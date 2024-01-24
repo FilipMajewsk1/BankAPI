@@ -1,44 +1,27 @@
-version: '3.8'
-
 services:
-  app:
-    build: .
+  api-app:
+    build:
+      context: ./apiApp
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mydatabase
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
-    depends_on:
-      - db
-    networks:
-      - app-network
 
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
-      - app-network
+  flutter-app:
+    build:
+      context: ./flutterApp
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081" # Zakładając, że aplikacja Flutter nasłuchuje na porcie 8081
 
   nginx:
-    image: nginx:latest
+    image: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/pkcs8_key.pem:/etc/ssl/private/server.key
+      - ./nginx/server.crt:/etc/ssl/certs/server.crt
     ports:
       - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - "443:443"
     depends_on:
-      - app
-    networks:
-      - app-network
-
-volumes:
-  db-data:
-
-networks:
-  app-network:
-    driver: bridge
+      - api-app
+      - flutter-app

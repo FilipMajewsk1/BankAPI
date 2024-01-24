@@ -5,24 +5,34 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import odwsi.bank.dtos.AccountDTO;
 import odwsi.bank.models.Account;
+import odwsi.bank.models.Client;
 import odwsi.bank.repositories.AccountRepository;
+import odwsi.bank.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
 public class AccountService {
     private final AccountRepository repository;
+    private final ClientRepository clientRepository;
     private final Validator validator;
 
     @Autowired
-    public AccountService(AccountRepository repository, Validator validator) {
+    public AccountService(AccountRepository repository,ClientRepository clientRepository, Validator validator) {
         this.repository = repository;
+        this.clientRepository = clientRepository;
         this.validator = validator;
     }
 
     public Account getAccount(int id) {
         return repository.findById(id).orElse(null);
+    }
+
+    public Account getAccount(Authentication authentication) {
+        String email = authentication.getPrincipal().toString();
+        return clientRepository.findByEmail(email).getAccount();
     }
 
     public Iterable<Account> getAllAccounts() {

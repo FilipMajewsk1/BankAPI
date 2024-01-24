@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Tag(name = "Transfer Controller")
-@RequestMapping("/api")
+@RequestMapping("/api/norm")
 @RestController
 public class TransferController {
     private final TransferService transferService;

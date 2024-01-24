@@ -52,14 +52,11 @@ public class PasswordService {
             List<Integer> indices = pickThreeRandomNumbers(str);
             Collections.sort(indices);
             String positions = "";
+            String combination="";
             for (int j = 0; j < 3; j++){
+                combination+=str.charAt(indices.get(j));
                 positions+=indices.get(j).toString()+"/";
             }
-            String combination = indices.stream()
-                    .map(str::charAt)
-                    .map(Object::toString)
-                    .collect(Collectors.joining());
-
             if (!combinations.contains(combination)) {
                 combinations.add(combination);
                 Password password = new Password();
@@ -69,9 +66,7 @@ public class PasswordService {
                 passwords.add(password);
                 maxCombinations--;
             }
-
         }
-
         return passwords;
     }
 
@@ -86,10 +81,11 @@ public class PasswordService {
 
 
     public Client getUserIfPasswordCorrect(int id, String email, String password) {
-        var client = clientRepository.findByEmail(email);
+        Client client = clientRepository.findByEmail(email);
         var passwordOpt = client.getPasswords().stream().filter(p-> p.getId() == id).findFirst();
+        String pp = passwordOpt.get().getPassword();
         if(passwordOpt.isEmpty()) return null;
-        if(passwordEncoder.encode(password).equals(passwordOpt.get().getPassword())){
+        if(passwordEncoder.matches(password,pp)){
             return client;
         }
         return null;
