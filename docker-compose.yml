@@ -10,7 +10,7 @@ services:
         - API_HOST=localhost
         - API_PATH=/api
     ports:
-      - 8081:80
+      - 80:8081
     networks:
       - intr
       - extr
