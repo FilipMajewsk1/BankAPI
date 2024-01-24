@@ -1,5 +1,19 @@
 version: '3'
 services:
+  front:
+    build:
+      context: .
+      dockerfile: ./flutterApp/Dockerfile
+      args:
+        - API_PROTOCOL=https
+        - API_PORT=443
+        - API_HOST=localhost
+        - API_PATH=/api
+    ports:
+      - 8081:80
+    networks:
+      - intr
+      - extr
   nginx:
     image: nginx
     build:
@@ -19,3 +33,11 @@ services:
       - type: bind
         source: ./nginx/server.cert
         target: /etc/nginx/conf.d/server.cert
+    networks:
+      - extr
+      - intr
+networks:
+  intr:
+    internal: true
+  extr:
+    internal: false

@@ -20,9 +20,13 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 RUN mkdir /app/
-COPY . ../../flutter_folder/bank_web_app
+COPY ./flutterApp/bank_web_app /app/
 WORKDIR /app/
-RUN flutter build web --dart-define=API_PROTOCOL=https --dart-define=API_HOST=localhost --dart-define=API_PATH=api --dart-define=API_PORT=443
+ARG API_PROTOCOL
+ARG API_HOST
+ARG API_PATH
+ARG API_PORT
+RUN flutter build web --dart-define=API_PROTOCOL=${API_PROTOCOL} --dart-define=API_HOST=${API_HOST} --dart-define=API_PATH=${API_PATH} --dart-define=API_PORT=${API_PORT}
 
 FROM nginx:1.21.1-alpine
 COPY --from=build /app/build/web /usr/share/nginx/html
