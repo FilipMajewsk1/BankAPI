@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,18 +45,21 @@ public class TransferController {
 
     @PostMapping("/transfers")
     public ResponseEntity<?> create(@RequestBody MakeTranfer transfer, Authentication authentication){
+        if(authentication== null){
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        }
         if(transfer.getSum() == null){
             throw new IllegalArgumentException("Sum cannot be null");
         }
         Account fromAccount = clientService.getClient(authentication.getPrincipal().toString()).getAccount();
         Account toAccount = aRepository.findByAccountNumber(transfer.getToAccountNumber());
 
-        fromAccount.setBalance(fromAccount.getBalance().add(transfer.getSum().negate()));
-        toAccount.setBalance(toAccount.getBalance().add(transfer.getSum()));
+        fromAccount.setBalance(fromAccount.getBalance().add(new BigDecimal(transfer.getSum()).negate()));
+        toAccount.setBalance(toAccount.getBalance().add(new BigDecimal(transfer.getSum())));
 
         aRepository.save(fromAccount);
         aRepository.save(toAccount);
-        return new ResponseEntity<>("Transfer was succesfull!", HttpStatus.OK);
+        return new ResponseEntity<>(transfer, HttpStatus.OK);
     }
 
     @GetMapping("/transfers")

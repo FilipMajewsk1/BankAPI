@@ -37,14 +37,14 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers("/api/login**")
+                        .requestMatchers("/api/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated());
         http
                 .cors(config ->{
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("http://localhost","https://localhost"));
+            configuration.setAllowedOrigins(Arrays.asList("http://localhost/8080","http://localhost:56188"));
             configuration.setAllowedHeaders(Arrays.asList("*"));
             configuration.setAllowedMethods(Arrays.asList("*"));
             configuration.setAllowCredentials(true);

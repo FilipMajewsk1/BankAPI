@@ -60,7 +60,7 @@ public class ClientController {
             summary = "Retrieve all clients",
             description = "Get a list of all Client objects",
             tags = { "get" })
-    @GetMapping("/clients")
+    @GetMapping("/all/clients")
     public List<ClientDTO> getAll() {
         List<ClientDTO> clients = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class ClientController {
     @Operation(
             summary = "Retrieve client",
             tags = { "get" })
-    @GetMapping("/clients/{id}")
+    @GetMapping("/clients")
     public ResponseEntity<?> get(Authentication authentication) {
         return new ResponseEntity<>( ClientDTO.mapToDto(service.getClient(authentication)), HttpStatus.OK);
     }

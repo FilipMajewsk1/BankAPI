@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 @Data
 public class MakeTranfer {
     private String title;
-    private BigDecimal sum;
+    private String sum;
     private String fromAccountNumber;
     private String toAccountNumber;
 }

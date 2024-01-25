@@ -39,7 +39,7 @@ public class AccountController {
             summary = "Retrieve all accounts",
             description = "Get a list of all Account objects",
             tags = { "get" })
-    @GetMapping("/accounts")
+    @GetMapping("/all/accounts")
     public List<AccountDTO> getAll() {
         List<AccountDTO> accounts = new ArrayList<>();
 
@@ -52,7 +52,7 @@ public class AccountController {
             summary = "Retrieve account",
             description = "Get Account object by specifying its id",
             tags = { "get" })
-    @GetMapping("/accounts/{id}")
+    @GetMapping("/accounts")
     public ResponseEntity<?> get(Authentication authentication) {
         return new ResponseEntity<>( AccountDTO.mapToDto(service.getAccount(authentication)), HttpStatus.OK);
     }
