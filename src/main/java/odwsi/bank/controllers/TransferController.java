@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import odwsi.bank.security.DataValidation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -45,12 +46,19 @@ public class TransferController {
 
     @PostMapping("/transfers")
     public ResponseEntity<?> create(@RequestBody MakeTranfer transfer, Authentication authentication){
+
         if(authentication== null){
             return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
         }
         if(transfer.getSum() == null){
             throw new IllegalArgumentException("Sum cannot be null");
         }
+        if(DataValidation.validateTransferSum(transfer.getSum()) == false ||
+        DataValidation.validateAccountNumber(transfer.getFromAccountNumber()) == false ||
+        DataValidation.validateAccountNumber(transfer.getToAccountNumber()) == false ){
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        }
+
         Account fromAccount = clientService.getClient(authentication.getPrincipal().toString()).getAccount();
         Account toAccount = aRepository.findByAccountNumber(transfer.getToAccountNumber());
 

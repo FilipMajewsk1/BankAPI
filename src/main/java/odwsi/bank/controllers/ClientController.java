@@ -36,26 +36,6 @@ public class ClientController {
         this.pService = pService;
         this.aService = aService;
     }
-
-    @Operation(
-            summary = "Create client",
-            description = "Create new Client object",
-            tags = { "post" })
-    @Transactional
-    @PostMapping("/clients")
-    public Client create(@RequestBody CreateClientRequest request) {
-        Client client = Client.builder()
-                .name(request.getName())
-                .surname(request.getSurname())
-                .pesel(request.getPesel())
-                .account(aService.getAccount(request.getAccount_id()))
-                .email(request.getEmail())
-                .phoneNum(request.getPhoneNum())
-                .passwords(pService.createThreeCharCombinations(request.getPassword())).build();
-        client.getPasswords().forEach(p -> p.setClient(client));
-        return (service.createClient(client));
-    }
-
     @Operation(
             summary = "Retrieve all clients",
             description = "Get a list of all Client objects",
@@ -68,32 +48,12 @@ public class ClientController {
 
         return clients;
     }
-
     @Operation(
             summary = "Retrieve client",
             tags = { "get" })
     @GetMapping("/clients")
     public ResponseEntity<?> get(Authentication authentication) {
         return new ResponseEntity<>( ClientDTO.mapToDto(service.getClient(authentication)), HttpStatus.OK);
-    }
-
-
-    @Operation(
-            summary = "Update client",
-            description = "Update Client object by specifying its id",
-            tags = { "patch" })
-    @PatchMapping("/clients/{id}")
-    public ClientDTO update(@PathVariable int id, @RequestBody ClientDTO clientDto) {
-        return ClientDTO.mapToDto(service.updateClient(id, service.mapFromDto(clientDto)));
-    }
-
-    @Operation(
-            summary = "Delete client",
-            description = "Delete Client object by specifying its id",
-            tags = { "delete" })
-    @DeleteMapping("/clients/{id}")
-    public void delete(@PathVariable int id) {
-        service.deleteClient(id);
     }
 
 }

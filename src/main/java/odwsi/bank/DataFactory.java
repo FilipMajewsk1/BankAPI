@@ -8,6 +8,7 @@ import odwsi.bank.models.Transfer;
 import odwsi.bank.repositories.AccountRepository;
 import odwsi.bank.repositories.ClientRepository;
 import odwsi.bank.repositories.TransferRepository;
+import odwsi.bank.security.DataValidation;
 import odwsi.bank.security.PasswordService;
 import odwsi.bank.services.AccountService;
 import odwsi.bank.services.ClientService;
@@ -65,6 +66,7 @@ public class DataFactory implements CommandLineRunner {
                 .email(email)
                 .phoneNum(phoneNum)
                 .passwords(passwordService.createThreeCharCombinations(password)).build();
+
         client.getPasswords().forEach(p -> p.setClient(client));
         clientService.createClient(client);
     }

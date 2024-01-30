@@ -10,6 +10,7 @@ import odwsi.bank.dtos.PasswordDTO;
 import odwsi.bank.dtos.PasswordLoginRequest;
 import odwsi.bank.models.Password;
 import odwsi.bank.repositories.ClientRepository;
+import odwsi.bank.security.DataValidation;
 import odwsi.bank.security.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,12 @@ public class LoginController {
     @Transactional
     public ResponseEntity<?> authenticateUser(@RequestBody PasswordLoginRequest loginRequest,
                                                    HttpSession session, HttpServletRequest request) {
+
+        if(DataValidation.validateEmail(loginRequest.getEmail()) == false ||
+                DataValidation.validate3LetterWord(loginRequest.getPassword()) == false){
+            return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
+        }
+
         var client = passwordService.getUserIfPasswordCorrect(
                 loginRequest.getId(), loginRequest.getEmail(), loginRequest.getPassword());
 

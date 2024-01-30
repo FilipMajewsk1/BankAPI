@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import odwsi.bank.dtos.ClientDTO;
 import odwsi.bank.models.Client;
 import odwsi.bank.repositories.ClientRepository;
+import odwsi.bank.security.DataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,9 @@ public class ClientService {
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
+
+
+
         return repository.save(client);
     }
 
