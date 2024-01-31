@@ -44,7 +44,7 @@ public class SecurityConfiguration {
         http
                 .cors(config ->{
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("http://localhost/8080","http://localhost:56188"));
+            configuration.setAllowedOrigins(Arrays.asList("http://localhost/8080","http://localhost:7763"));
             configuration.setAllowedHeaders(Arrays.asList("*"));
             configuration.setAllowedMethods(Arrays.asList("*"));
             configuration.setAllowCredentials(true);

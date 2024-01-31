@@ -76,4 +76,11 @@ public class TransferController {
         transferService.getClientsTransfers(authentication.getPrincipal().toString()).forEach((x) -> transfers.add(TransferDTO.mapToDto(x)));
         return new ResponseEntity<>(transfers, HttpStatus.OK);
     }
+
+    @GetMapping("/transfersss")
+    public List<TransferDTO> getAllForClientwithemail(@RequestParam String email){
+        List<TransferDTO> transfers = new ArrayList<>();
+        transferService.getClientsTransfers(email).forEach((x) -> transfers.add(TransferDTO.mapToDto(x)));
+        return transfers;
+    }
 }

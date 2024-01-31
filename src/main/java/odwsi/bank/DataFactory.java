@@ -37,11 +37,12 @@ public class DataFactory implements CommandLineRunner {
         createAccount(3, "11111111111111111111111113", "4500.12");
 
         createClient(1, "Adam", "Malysz", "12345678910", 1 ,"skaczedaleko@gmail.com", "Password123", "111222333");
-        createClient(2, "Kamil", "Stoch", "22345678910", 2 ,"slaboskacze@gmail.com", "zetis12345", "113222333");
+        createClient(2, "Kamil", "Stoch", "22345678910", 2 ,"slaboskacze@gmail.com", "Zetis12345", "113222333");
         createClient(3, "Mariusz", "Pudzianowski", "17745678910", 3 ,"tobynicniedalo@gmail.com", "PolskaGora123", "111222343");
 
         createTransfer(1, "fromMariuszToKamil", "21.50","11111111111111111111111113",  "11111111111111111111111112");
-
+        createTransfer(2, "fromMariuszToAdam", "204.50","11111111111111111111111113",  "11111111111111111111111111");
+        createTransfer(3, "fromAdamToKamil", "12.50","11111111111111111111111111",  "11111111111111111111111112");
     }
 
     private void createAccount(int id, String accountNumber, String balance){

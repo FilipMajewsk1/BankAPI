@@ -37,9 +37,13 @@ public class LoginController {
     private final PasswordService passwordService;
     private final ClientRepository clientRepository;
     @GetMapping("/login")
-    public ResponseEntity<PasswordDTO> getPasswordInstructions(@RequestParam String email){
-        return new ResponseEntity<PasswordDTO>(
-                passwordService.getOneOfTheCombinations(clientRepository.findByEmail(email)), HttpStatus.OK);
+    public ResponseEntity<?> getPasswordInstructions(@RequestParam String email){
+        if(clientRepository.findByEmail(email)!=null) {
+            return new ResponseEntity<PasswordDTO>(
+                    passwordService.getOneOfTheCombinations(clientRepository.findByEmail(email)), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping("/login")
