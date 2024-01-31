@@ -22,6 +22,11 @@ public class DataValidation {
         return matcher.matches();
     }
 
+    public static boolean validateTitle(String text) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z ]+$");
+        return pattern.matcher(text).matches() && text.length() <= 100;
+    }
+
     public static boolean validate3LetterWord(String password) {
         Pattern pattern = Pattern.compile(THREE_LETTER_REGEX);
         Matcher matcher = pattern.matcher(password);

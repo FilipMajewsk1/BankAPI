@@ -25,26 +25,11 @@ public class AccountController {
     public AccountController(AccountService service) {
         this.service = service;
     }
-
-    @Operation(
-            summary = "Retrieve all accounts",
-            description = "Get a list of all Account objects",
-            tags = { "get" })
-    @GetMapping("/all/accounts")
-    public List<AccountDTO> getAll() {
-        List<AccountDTO> accounts = new ArrayList<>();
-
-        service.getAllAccounts().forEach((x) -> accounts.add(AccountDTO.mapToDto(x)));
-
-        return accounts;
-    }
-
-    @Operation(
-            summary = "Retrieve account",
-            description = "Get Account object by specifying its id",
-            tags = { "get" })
     @GetMapping("/accounts")
     public ResponseEntity<?> get(Authentication authentication) {
+        if(authentication== null){
+            return new ResponseEntity<String>("Can`t authenticate ", HttpStatus.UNAUTHORIZED);
+        }
         return new ResponseEntity<>( AccountDTO.mapToDto(service.getAccount(authentication)), HttpStatus.OK);
     }
 

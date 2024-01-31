@@ -1,10 +1,13 @@
 package odwsi.bank.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import odwsi.bank.dtos.MakeTranfer;
 import odwsi.bank.dtos.TransferDTO;
 import odwsi.bank.models.Account;
+import odwsi.bank.models.Transfer;
 import odwsi.bank.repositories.AccountRepository;
+import odwsi.bank.repositories.TransferRepository;
 import odwsi.bank.services.ClientService;
 import odwsi.bank.services.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,63 +27,60 @@ import java.util.Optional;
 @RestController
 public class TransferController {
     private final TransferService transferService;
+    private final TransferRepository transferRepository;
     private final ClientService clientService;
     private final AccountRepository aRepository;
 
     @Autowired
     public TransferController(TransferService transferService,
                               ClientService clientService,
-                              AccountRepository aRepository){
+                              AccountRepository aRepository,
+                                TransferRepository transferRepository){
         this.transferService = transferService;
+        this.transferRepository = transferRepository;
         this.clientService = clientService;
         this.aRepository = aRepository;
     }
 
-    @GetMapping("/transferss")
-    public List<TransferDTO> getAll(){
-        List<TransferDTO> transfers = new ArrayList<>();
-
-        transferService.getAllTransfers().forEach((x)-> transfers.add(TransferDTO.mapToDto(x)));
-        return transfers;
-    }
-
     @PostMapping("/transfers")
+    @Transactional
     public ResponseEntity<?> create(@RequestBody MakeTranfer transfer, Authentication authentication){
 
         if(authentication== null){
-            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
-        }
-        if(transfer.getSum() == null){
-            throw new IllegalArgumentException("Sum cannot be null");
+            return new ResponseEntity<String>("Can`t authenticate ", HttpStatus.UNAUTHORIZED);
         }
         if(DataValidation.validateTransferSum(transfer.getSum()) == false ||
-        DataValidation.validateAccountNumber(transfer.getFromAccountNumber()) == false ||
-        DataValidation.validateAccountNumber(transfer.getToAccountNumber()) == false ){
-            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        DataValidation.validateAccountNumber(transfer.getToAccountNumber()) == false ||
+        DataValidation.validateTitle(transfer.getTitle())==false){
+            return new ResponseEntity<String>("Can`t validate", HttpStatus.UNAUTHORIZED);
         }
 
         Account fromAccount = clientService.getClient(authentication.getPrincipal().toString()).getAccount();
         Account toAccount = aRepository.findByAccountNumber(transfer.getToAccountNumber());
-
+        if(fromAccount.getAccountNumber() == toAccount.getAccountNumber()){
+            return new ResponseEntity<String>("The same numbers", HttpStatus.UNAUTHORIZED);
+        }
         fromAccount.setBalance(fromAccount.getBalance().add(new BigDecimal(transfer.getSum()).negate()));
         toAccount.setBalance(toAccount.getBalance().add(new BigDecimal(transfer.getSum())));
 
         aRepository.save(fromAccount);
         aRepository.save(toAccount);
-        return new ResponseEntity<>(transfer, HttpStatus.OK);
+
+        Transfer newTransfer = new Transfer(-1, transfer.getTitle(), new BigDecimal(transfer.getSum()), fromAccount,toAccount);
+
+        transferRepository.save(newTransfer);
+
+        return new ResponseEntity<MakeTranfer>(transfer, HttpStatus.OK);
     }
 
     @GetMapping("/transfers")
     public ResponseEntity<?> getAllForClient(Authentication authentication){
+        if(authentication== null){
+            return new ResponseEntity<String>("Can`t authenticate ", HttpStatus.UNAUTHORIZED);
+        }
         List<TransferDTO> transfers = new ArrayList<>();
         transferService.getClientsTransfers(authentication.getPrincipal().toString()).forEach((x) -> transfers.add(TransferDTO.mapToDto(x)));
-        return new ResponseEntity<>(transfers, HttpStatus.OK);
+        return new ResponseEntity<List<TransferDTO>>(transfers, HttpStatus.OK);
     }
 
-    @GetMapping("/transfersss")
-    public List<TransferDTO> getAllForClientwithemail(@RequestParam String email){
-        List<TransferDTO> transfers = new ArrayList<>();
-        transferService.getClientsTransfers(email).forEach((x) -> transfers.add(TransferDTO.mapToDto(x)));
-        return transfers;
-    }
 }

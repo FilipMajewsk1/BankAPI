@@ -36,23 +36,11 @@ public class ClientController {
         this.pService = pService;
         this.aService = aService;
     }
-    @Operation(
-            summary = "Retrieve all clients",
-            description = "Get a list of all Client objects",
-            tags = { "get" })
-    @GetMapping("/all/clients")
-    public List<ClientDTO> getAll() {
-        List<ClientDTO> clients = new ArrayList<>();
-
-        service.getAllClients().forEach((x) -> clients.add(ClientDTO.mapToDto(x)));
-
-        return clients;
-    }
-    @Operation(
-            summary = "Retrieve client",
-            tags = { "get" })
     @GetMapping("/clients")
     public ResponseEntity<?> get(Authentication authentication) {
+        if(authentication == null){
+            return new ResponseEntity<String>("Can`t authenticate ", HttpStatus.UNAUTHORIZED);
+        }
         return new ResponseEntity<>( ClientDTO.mapToDto(service.getClient(authentication)), HttpStatus.OK);
     }
 
