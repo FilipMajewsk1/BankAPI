@@ -60,6 +60,10 @@ public class TransferController {
         if(fromAccount.getAccountNumber() == toAccount.getAccountNumber()){
             return new ResponseEntity<String>("The same numbers", HttpStatus.UNAUTHORIZED);
         }
+        if(new BigDecimal(transfer.getSum()).compareTo(fromAccount.getBalance())>0){
+            return new ResponseEntity<String>("Insufficient funds", HttpStatus.UNAUTHORIZED);
+        }
+
         fromAccount.setBalance(fromAccount.getBalance().add(new BigDecimal(transfer.getSum()).negate()));
         toAccount.setBalance(toAccount.getBalance().add(new BigDecimal(transfer.getSum())));
 
