@@ -1,27 +1,11 @@
-version: '3'
 services:
-  front:
-    build:
-      context: .
-      dockerfile: ./flutterApp/Dockerfile
-      args:
-        - API_PROTOCOL=https
-        - API_PORT=443
-        - API_HOST=localhost
-        - API_PATH=/api
-    ports:
-      - 80:8081
-    networks:
-      - intr
-      - extr
-  nginx:
-    image: nginx
+  back:
     build:
       context: .
       dockerfile: ./apiApp/Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
+
+  nginx:
+    image: nginx
     volumes:
       - type: bind
         source: ./nginx/nginx.conf
@@ -31,13 +15,13 @@ services:
         source: ./nginx/pkcs8_key.pem
         target: /etc/nginx/conf.d/server.key
       - type: bind
-        source: ./nginx/server.cert
-        target: /etc/nginx/conf.d/server.cert
-    networks:
-      - extr
-      - intr
-networks:
-  intr:
-    internal: true
-  extr:
-    internal: false
+        source: ./nginx/server.crt
+        target: /etc/nginx/conf.d/server.crt
+      - type: bind
+        source: ./flutterApp/bank_web_app/build/web
+        target: /usr/share/nginx/html
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - back
