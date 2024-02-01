@@ -51,16 +51,16 @@ public class TransferController {
         if(DataValidation.validateTransferSum(transfer.getSum()) == false ||
         DataValidation.validateAccountNumber(transfer.getToAccountNumber()) == false ||
         DataValidation.validateTitle(transfer.getTitle())==false){
-            return new ResponseEntity<String>("Can`t validate", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("Can`t validate", HttpStatus.BAD_REQUEST);
         }
 
         Account fromAccount = clientService.getClient(authentication.getPrincipal().toString()).getAccount();
         Account toAccount = aRepository.findByAccountNumber(transfer.getToAccountNumber());
         if(fromAccount.getAccountNumber() == toAccount.getAccountNumber()){
-            return new ResponseEntity<String>("The same numbers", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("The same numbers", HttpStatus.BAD_REQUEST);
         }
         if(new BigDecimal(transfer.getSum()).compareTo(fromAccount.getBalance())>0){
-            return new ResponseEntity<String>("Insufficient funds", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<String>("Insufficient funds", HttpStatus.BAD_REQUEST);
         }
 
         fromAccount.setBalance(fromAccount.getBalance().add(new BigDecimal(transfer.getSum()).negate()));

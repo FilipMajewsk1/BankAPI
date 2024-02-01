@@ -32,13 +32,13 @@ public class LoginController {
     @GetMapping("/login")
     public ResponseEntity<?> getPasswordInstructions(@RequestParam String email){
         if(DataValidation.validateEmail(email) == false){
-            return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
         }
         if(clientRepository.findByEmail(email)!=null) {
             return new ResponseEntity<PasswordDTO>(
                     passwordService.getOneOfTheCombinations(clientRepository.findByEmail(email)), HttpStatus.OK);
         }else{
-            return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -50,7 +50,7 @@ public class LoginController {
 
         if(DataValidation.validateEmail(loginRequest.getEmail()) == false ||
                 DataValidation.validate3LetterWord(loginRequest.getPassword()) == false){
-            return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
         }
 
         try {
@@ -72,6 +72,6 @@ public class LoginController {
 
             return new ResponseEntity<>(client, HttpStatus.OK);
         }
-        return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
     }
 }
