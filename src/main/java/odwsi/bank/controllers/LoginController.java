@@ -47,11 +47,17 @@ public class LoginController {
     public ResponseEntity<?> authenticateUser(@RequestBody PasswordLoginRequest loginRequest,
                                                    HttpSession session, HttpServletRequest request) {
 
+
         if(DataValidation.validateEmail(loginRequest.getEmail()) == false ||
                 DataValidation.validate3LetterWord(loginRequest.getPassword()) == false){
             return new ResponseEntity<>( "Invalid login", HttpStatus.UNAUTHORIZED);
         }
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         var client = passwordService.getUserIfPasswordCorrect(
                 loginRequest.getId(), loginRequest.getEmail(), loginRequest.getPassword());
 
