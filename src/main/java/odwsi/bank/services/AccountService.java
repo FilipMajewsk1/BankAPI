@@ -5,7 +5,6 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import odwsi.bank.dtos.AccountDTO;
 import odwsi.bank.models.Account;
-import odwsi.bank.models.Client;
 import odwsi.bank.repositories.AccountRepository;
 import odwsi.bank.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;

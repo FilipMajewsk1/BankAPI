@@ -4,7 +4,6 @@ import lombok.*;
 import odwsi.bank.models.Transfer;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor

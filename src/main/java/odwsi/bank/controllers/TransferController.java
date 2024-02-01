@@ -20,7 +20,6 @@ import odwsi.bank.security.DataValidation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Tag(name = "Transfer Controller")
 @RequestMapping("/api/norm")

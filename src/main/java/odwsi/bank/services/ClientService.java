@@ -6,7 +6,6 @@ import jakarta.validation.Validator;
 import odwsi.bank.dtos.ClientDTO;
 import odwsi.bank.models.Client;
 import odwsi.bank.repositories.ClientRepository;
-import odwsi.bank.security.DataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -37,49 +36,17 @@ public class ClientService {
         return repository.findByEmail(email);
     }
 
-    public Iterable<Client> getAllClients() {
-        return repository.findAll();
-    }
-
     public Client createClient(Client client) {
         Set<ConstraintViolation<Client>> violations = validator.validate(client);
+
 
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
-
-
 
         return repository.save(client);
     }
 
-    public void deleteClient(int id) {
-
-        repository.deleteById(id);
-    }
-
-    public Client updateClient(int id, Client client) {
-        Client clientToUpdate = repository.findById(id).orElse(null);
-
-        if (clientToUpdate == null) {
-            throw new IllegalArgumentException(String.format("The client with ID %d was not found - failed to update.", id));
-        }
-
-        clientToUpdate.setName(client.getName());
-        clientToUpdate.setSurname(client.getSurname());
-        clientToUpdate.setEmail(client.getEmail());
-        clientToUpdate.setPesel(client.getPesel());
-        clientToUpdate.setPhoneNum(client.getPhoneNum());
-        clientToUpdate.setAccount(client.getAccount());
-
-        Set<ConstraintViolation<Client>> violations = validator.validate(clientToUpdate);
-
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
-
-        return repository.save(clientToUpdate);
-    }
 
     public Client mapFromDto(ClientDTO dto) {
         return dto != null ? Client.builder()

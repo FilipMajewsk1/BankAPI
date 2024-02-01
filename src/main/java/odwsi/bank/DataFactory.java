@@ -6,19 +6,15 @@ import odwsi.bank.models.Account;
 import odwsi.bank.models.Client;
 import odwsi.bank.models.Transfer;
 import odwsi.bank.repositories.AccountRepository;
-import odwsi.bank.repositories.ClientRepository;
-import odwsi.bank.repositories.TransferRepository;
 import odwsi.bank.security.DataValidation;
 import odwsi.bank.security.PasswordService;
 import odwsi.bank.services.AccountService;
 import odwsi.bank.services.ClientService;
 import odwsi.bank.services.TransferService;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -58,6 +54,9 @@ public class DataFactory implements CommandLineRunner {
                               String email,
                               String password,
                               String phoneNum){
+        if(DataValidation.validatePassword(password) == false){
+            return;
+        }
         Client client = Client.builder()
                 .id(id)
                 .name(name)
@@ -77,6 +76,12 @@ public class DataFactory implements CommandLineRunner {
                                 String sum,
                                 String fromAccountNumber,
                                 String toAccountNumber){
+        if(DataValidation.validateTransferSum(sum) == false ||
+        DataValidation.validateTitle(title) == false ||
+        DataValidation.validateAccountNumber(fromAccountNumber) == false ||
+        DataValidation.validateAccountNumber(toAccountNumber) == false){
+            return;
+        }
         Transfer transfer= new Transfer(
                 id,
                 title,

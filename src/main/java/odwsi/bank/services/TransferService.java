@@ -5,16 +5,13 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import odwsi.bank.dtos.TransferDTO;
 import odwsi.bank.models.Account;
-import odwsi.bank.models.Client;
 import odwsi.bank.models.Transfer;
 import odwsi.bank.repositories.AccountRepository;
 import odwsi.bank.repositories.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -37,11 +34,6 @@ public class TransferService {
 
     public Transfer getTransfer(int id) {
         return repository.findById(id).orElse(null);
-    }
-
-
-    public Iterable<Transfer> getAllTransfers() {
-        return repository.findAll();
     }
 
     public Iterable<Transfer> getClientsTransfers(String email) {
@@ -74,29 +66,6 @@ public class TransferService {
         accountRepository.save(toAccount);
 
         return repository.save(transfer);
-    }
-
-    public void deleteTransfer(int id) {
-        repository.deleteById(id);
-    }
-
-    public Transfer updateTransfer(int id, Transfer transfer) {
-        Transfer transferToUpdate = repository.findById(id).orElse(null);
-
-        if (transferToUpdate == null) {
-            throw new IllegalArgumentException(String.format("The transfer with ID %d was not found - failed to update.", id));
-        }
-
-        transferToUpdate.setSum(transfer.getSum());
-        transferToUpdate.setToAccount(transfer.getToAccount());
-
-        Set<ConstraintViolation<Transfer>> violations = validator.validate(transferToUpdate);
-
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
-
-        return repository.save(transferToUpdate);
     }
 
     public Transfer mapFromDto(TransferDTO dto) {

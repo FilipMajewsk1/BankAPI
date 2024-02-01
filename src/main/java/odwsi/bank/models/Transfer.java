@@ -2,15 +2,11 @@ package odwsi.bank.models;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.Objects;
-import org.springframework.data.annotation.CreatedDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -1,28 +1,21 @@
 package odwsi.bank.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import odwsi.bank.dtos.LoginDTO;
 import odwsi.bank.dtos.PasswordDTO;
 import odwsi.bank.dtos.PasswordLoginRequest;
-import odwsi.bank.models.Password;
 import odwsi.bank.repositories.ClientRepository;
 import odwsi.bank.security.DataValidation;
 import odwsi.bank.security.PasswordService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import java.util.List;
