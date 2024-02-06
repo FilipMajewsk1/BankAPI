@@ -58,6 +58,8 @@ public class Client implements UserDetails {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     private Account account;
 
+    @NotNull
+    private int attempts;
 
 
     @Override
@@ -117,7 +119,7 @@ public class Client implements UserDetails {
                 ", email='" + email + '\'' +
                 ", pesel='" + pesel + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
-                ", account=" + (account != null ? account.getId() : "null") + // Tylko ID konta, aby uniknąć rekurencji
+                ", account=" + (account != null ? account.getId() : "null") +
                 '}';
     }
 

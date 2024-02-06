@@ -65,6 +65,7 @@ public class DataFactory implements CommandLineRunner {
                 .account(accountService.getAccount(accountId))
                 .email(email)
                 .phoneNum(phoneNum)
+                .attempts(0)
                 .passwords(passwordService.createThreeCharCombinations(password)).build();
 
         client.getPasswords().forEach(p -> p.setClient(client));

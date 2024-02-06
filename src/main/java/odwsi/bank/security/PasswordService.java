@@ -39,8 +39,8 @@ public class PasswordService {
     }
 
     public List<Password> createThreeCharCombinations(String str) {
-        if (str.length() < 8) {
-            throw new IllegalArgumentException("String must be at least 8 characters long.");
+        if (str.length() < 10) {
+            throw new IllegalArgumentException("String must be at least 10 characters long.");
         }
 
         List<String> combinations = new ArrayList<>();

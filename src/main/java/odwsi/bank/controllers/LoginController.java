@@ -35,7 +35,7 @@ public class LoginController {
             return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
         }
         if(clientRepository.findByEmail(email)!=null) {
-            return new ResponseEntity<PasswordDTO>(
+                        return new ResponseEntity<PasswordDTO>(
                     passwordService.getOneOfTheCombinations(clientRepository.findByEmail(email)), HttpStatus.OK);
         }else{
             return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
@@ -53,11 +53,16 @@ public class LoginController {
             return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
         }
 
+        if(clientRepository.findByEmail(loginRequest.getEmail()).getAttempts()>3){
+            return new ResponseEntity<>( "Max attempts", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        clientRepository.findByEmail(loginRequest.getEmail()).setAttempts(0);
         var client = passwordService.getUserIfPasswordCorrect(
                 loginRequest.getId(), loginRequest.getEmail(), loginRequest.getPassword());
 
@@ -72,6 +77,7 @@ public class LoginController {
 
             return new ResponseEntity<>(client, HttpStatus.OK);
         }
+        clientRepository.findByEmail(loginRequest.getEmail()).setAttempts(clientRepository.findByEmail(loginRequest.getEmail()).getAttempts()+1);
         return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
     }
 }
