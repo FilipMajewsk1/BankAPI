@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import odwsi.bank.dtos.PasswordDTO;
 import odwsi.bank.dtos.PasswordLoginRequest;
 import odwsi.bank.repositories.ClientRepository;
+import odwsi.bank.repositories.PasswordLoginAttemptRepository;
 import odwsi.bank.security.DataValidation;
 import odwsi.bank.security.PasswordService;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class LoginController {
     private final AuthenticationManager authenticationManager;
     private final PasswordService passwordService;
     private final ClientRepository clientRepository;
+    private final PasswordLoginAttemptRepository passwordLoginAttemptRepository;
+
     @GetMapping("/login")
     public ResponseEntity<?> getPasswordInstructions(@RequestParam String email){
         if(DataValidation.validateEmail(email) == false){
@@ -64,7 +67,7 @@ public class LoginController {
         }
         clientRepository.findByEmail(loginRequest.getEmail()).setAttempts(0);
         var client = passwordService.getUserIfPasswordCorrect(
-                loginRequest.getId(), loginRequest.getEmail(), loginRequest.getPassword());
+                loginAttempt.getPasswordId(), loginRequest.getEmail(), loginRequest.getPassword());
 
         if(client!=null) {
             var authentication =

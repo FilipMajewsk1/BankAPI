@@ -3,7 +3,9 @@ package odwsi.bank.security;
 import odwsi.bank.dtos.PasswordDTO;
 import odwsi.bank.models.Client;
 import odwsi.bank.models.Password;
+import odwsi.bank.models.PasswordLoginAttempt;
 import odwsi.bank.repositories.ClientRepository;
+import odwsi.bank.repositories.PasswordLoginAttemptRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,12 @@ public class PasswordService {
 
     private final PasswordEncoder passwordEncoder;
     private final ClientRepository clientRepository;
+    private final PasswordLoginAttemptRepository passwordLoginAttemptRepository;
 
-    public PasswordService(PasswordEncoder passwordEncoder, ClientRepository clientRepository) {
+    public PasswordService(PasswordEncoder passwordEncoder, ClientRepository clientRepository, PasswordLoginAttemptRepository passwordLoginAttemptRepository) {
         this.passwordEncoder = passwordEncoder;
         this.clientRepository = clientRepository;
+        this.passwordLoginAttemptRepository = passwordLoginAttemptRepository;
     }
 
     private static List<Integer> pickThreeRandomNumbers(String str) {
@@ -72,9 +76,13 @@ public class PasswordService {
     public PasswordDTO getOneOfTheCombinations(Client client){
         List<Password> passwords = client.getPasswords();
         int random = new Random().nextInt(19);
+        Password password = passwords.get(random);
+
+        var attempt = passwordLoginAttemptRepository.save(PasswordLoginAttempt.builder().passwordId(password.getId()).build());
+
         PasswordDTO pp = PasswordDTO.builder()
-                .id(passwords.get(random).getId())
-                .positions(passwords.get(random).getPositions()).build();
+                .uuid(attempt.getUuid())
+                .positions(password.getPositions()).build();
         return pp;
     }
 
