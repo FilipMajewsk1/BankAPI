@@ -15,6 +15,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -66,6 +67,7 @@ public class DataFactory implements CommandLineRunner {
                 .email(email)
                 .phoneNum(phoneNum)
                 .attempts(0)
+                .attemptTime(LocalDateTime.now())
                 .passwords(passwordService.createThreeCharCombinations(password)).build();
 
         client.getPasswords().forEach(p -> p.setClient(client));

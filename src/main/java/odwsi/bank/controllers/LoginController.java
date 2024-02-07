@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
@@ -56,9 +58,32 @@ public class LoginController {
             return new ResponseEntity<>( "Invalid login", HttpStatus.BAD_REQUEST);
         }
 
-        if(clientRepository.findByEmail(loginRequest.getEmail()).getAttempts()>3){
-            return new ResponseEntity<>( "Max attempts", HttpStatus.BAD_REQUEST);
+        var loginAttempt = passwordLoginAttemptRepository.findByUuidAndUsedIsFalse(loginRequest.getUuid()).orElse(null);
+
+        if(loginAttempt == null) {
+            // login attempt used or login attempt nonexistent
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
+
+        loginAttempt.setUsed(true);
+        loginAttempt = passwordLoginAttemptRepository.save(loginAttempt);
+
+        var now = LocalDateTime.now();
+
+        if(clientRepository.findByEmail(loginRequest.getEmail()).getAttempts() > 3
+                && Duration.between(clientRepository.findByEmail(loginRequest.getEmail()).getAttemptTime(),now).toMinutes() > 5){
+            clientRepository.findByEmail(loginRequest.getEmail()).setAttempts(0);
+        }
+
+        if(clientRepository.findByEmail(loginRequest.getEmail()).getAttempts() == 0){
+            clientRepository.findByEmail(loginRequest.getEmail()).setAttemptTime(LocalDateTime.now());
+        }
+
+        if(clientRepository.findByEmail(loginRequest.getEmail()).getAttempts() > 3
+                && Duration.between(clientRepository.findByEmail(loginRequest.getEmail()).getAttemptTime(),now).toMinutes() < 5){
+            return new ResponseEntity<>( "Max attempts", HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
 
         try {
             Thread.sleep(1000);
