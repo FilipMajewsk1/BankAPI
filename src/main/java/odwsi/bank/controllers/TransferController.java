@@ -69,8 +69,8 @@ public class TransferController {
         aRepository.save(fromAccount);
         aRepository.save(toAccount);
 
-        Transfer newTransfer = new Transfer(-1, transfer.getTitle(), new BigDecimal(transfer.getSum()), fromAccount,toAccount);
-
+        //Transfer newTransfer = new Transfer(-1, transfer.getTitle(), new BigDecimal(transfer.getSum()), fromAccount,toAccount);
+        Transfer newTransfer = Transfer.builder().fromAccount(fromAccount).toAccount(toAccount).title(transfer.getTitle()).sum(new BigDecimal(transfer.getSum())).build();
         transferRepository.save(newTransfer);
 
         return new ResponseEntity<MakeTranfer>(transfer, HttpStatus.OK);
